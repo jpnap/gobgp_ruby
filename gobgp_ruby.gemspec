@@ -3,6 +3,10 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'gobgp_ruby/version'
 
+# add stub dir to load path
+stub = File.expand_path('../stub', __FILE__)
+$LOAD_PATH.unshift(stub) unless $LOAD_PATH.include?(stub)
+
 Gem::Specification.new do |spec|
   spec.name          = "gobgp_ruby"
   spec.version       = GobgpRuby::VERSION
