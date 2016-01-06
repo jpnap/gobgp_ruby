@@ -21,7 +21,7 @@ module Gobgpapi
       rpc :GetNeighbors, Arguments, stream(Peer)
       rpc :GetNeighbor, Arguments, Peer
       rpc :ModNeighbor, ModNeighborArguments, Error
-      rpc :GetRib, Arguments, stream(Destination)
+      rpc :GetRib, Table, Table
       rpc :Reset, Arguments, Error
       rpc :SoftReset, Arguments, Error
       rpc :SoftResetIn, Arguments, Error
@@ -29,11 +29,14 @@ module Gobgpapi
       rpc :Shutdown, Arguments, Error
       rpc :Enable, Arguments, Error
       rpc :Disable, Arguments, Error
-      rpc :ModPath, stream(ModPathArguments), Error
+      rpc :ModPath, ModPathArguments, ModPathResponse
+      rpc :ModPaths, stream(ModPathsArguments), Error
       rpc :MonitorBestChanged, Arguments, stream(Destination)
       rpc :MonitorPeerState, Arguments, stream(Peer)
       rpc :GetMrt, MrtArguments, stream(MrtMessage)
+      rpc :ModMrt, ModMrtArguments, Error
       rpc :GetRPKI, Arguments, stream(RPKI)
+      rpc :ModRPKI, ModRpkiArguments, Error
       rpc :GetROA, Arguments, stream(ROA)
       rpc :GetVrfs, Arguments, stream(Vrf)
       rpc :ModVrf, ModVrfArguments, Error

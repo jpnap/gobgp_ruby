@@ -14,10 +14,20 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "gobgpapi.Arguments" do
     optional :resource, :enum, 1, "gobgpapi.Resource"
-    optional :rf, :uint32, 2
+    optional :family, :uint32, 2
     optional :name, :string, 3
   end
   add_message "gobgpapi.ModPathArguments" do
+    optional :operation, :enum, 1, "gobgpapi.Operation"
+    optional :resource, :enum, 2, "gobgpapi.Resource"
+    optional :name, :string, 3
+    optional :path, :message, 4, "gobgpapi.Path"
+    optional :uuid, :bytes, 5
+  end
+  add_message "gobgpapi.ModPathResponse" do
+    optional :uuid, :bytes, 1
+  end
+  add_message "gobgpapi.ModPathsArguments" do
     optional :resource, :enum, 1, "gobgpapi.Resource"
     optional :name, :string, 2
     repeated :paths, :message, 3, "gobgpapi.Path"
@@ -28,9 +38,18 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "gobgpapi.MrtArguments" do
     optional :resource, :enum, 1, "gobgpapi.Resource"
-    optional :rf, :uint32, 2
+    optional :family, :uint32, 2
     optional :interval, :uint64, 3
     optional :neighbor_address, :string, 4
+  end
+  add_message "gobgpapi.ModMrtArguments" do
+    optional :operation, :enum, 1, "gobgpapi.Operation"
+    optional :filename, :string, 2
+  end
+  add_message "gobgpapi.ModRpkiArguments" do
+    optional :operation, :enum, 1, "gobgpapi.Operation"
+    optional :address, :string, 2
+    optional :port, :uint32, 3
   end
   add_message "gobgpapi.ModVrfArguments" do
     optional :operation, :enum, 1, "gobgpapi.Operation"
@@ -66,7 +85,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :is_withdraw, :bool, 5
     optional :validation, :int32, 6
     optional :no_implicit_withdraw, :bool, 7
-    optional :rf, :uint32, 8
+    optional :family, :uint32, 8
     optional :source_asn, :uint32, 9
     optional :source_id, :string, 10
     optional :filtered, :bool, 11
@@ -74,90 +93,29 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "gobgpapi.Destination" do
     optional :prefix, :string, 1
     repeated :paths, :message, 2, "gobgpapi.Path"
+    optional :longer_prefixes, :bool, 3
+  end
+  add_message "gobgpapi.Table" do
+    optional :type, :enum, 1, "gobgpapi.Resource"
+    optional :name, :string, 2
+    optional :family, :uint32, 3
+    repeated :destinations, :message, 4, "gobgpapi.Destination"
   end
   add_message "gobgpapi.Peer" do
-    optional :addpaths, :message, 1, "gobgpapi.AddPaths"
-    optional :afisafis, :message, 2, "gobgpapi.AfiSafis"
+    repeated :families, :uint32, 2
     optional :apply_policy, :message, 3, "gobgpapi.ApplyPolicy"
-    optional :as_path_options, :message, 4, "gobgpapi.AsPathOptions"
     optional :conf, :message, 5, "gobgpapi.PeerConf"
     optional :ebgp_multihop, :message, 6, "gobgpapi.EbgpMultihop"
-    optional :error_handling, :message, 7, "gobgpapi.ErrorHandling"
-    optional :graceful_restart, :message, 8, "gobgpapi.PeerGracefulRestart"
-    optional :logging_options, :message, 9, "gobgpapi.LoggingOptions"
     optional :route_reflector, :message, 10, "gobgpapi.RouteReflector"
     optional :info, :message, 11, "gobgpapi.PeerState"
     optional :timers, :message, 12, "gobgpapi.Timers"
     optional :transport, :message, 13, "gobgpapi.Transport"
-    optional :use_multiple_paths, :message, 14, "gobgpapi.UseMultiplePaths"
     optional :route_server, :message, 15, "gobgpapi.RouteServer"
-  end
-  add_message "gobgpapi.AddPaths" do
-    optional :receive, :bool, 1
-    optional :send_max, :uint32, 2
-  end
-  add_message "gobgpapi.AfiSafis" do
-    repeated :afisafi, :message, 1, "gobgpapi.AfiSafi"
-  end
-  add_message "gobgpapi.AfiSafi" do
-    optional :name, :string, 1
-    optional :apply_policy, :message, 2, "gobgpapi.ApplyPolicy"
-    optional :enabled, :bool, 3
-    optional :graceful_restart, :message, 4, "gobgpapi.AfiSafiGracefulRestart"
-    optional :ipv4_labelled_unicast, :message, 5, "gobgpapi.LabelledUnicast"
-    optional :ipv4_unicast, :message, 6, "gobgpapi.Unicast"
-    optional :ipv6_labelled_unicast, :message, 7, "gobgpapi.LabelledUnicast"
-    optional :ipv6_unicast, :message, 8, "gobgpapi.Unicast"
-    optional :l2_vpn_evpn, :message, 9, "gobgpapi.Vpn"
-    optional :l2_vpn_vpls, :message, 10, "gobgpapi.Vpn"
-    optional :l3_vpn_ipv4_multicast, :message, 11, "gobgpapi.Vpn"
-    optional :l3_vpn_ipv4_unicast, :message, 12, "gobgpapi.Vpn"
-    optional :l3_vpn_ipv6_multicast, :message, 13, "gobgpapi.Vpn"
-    optional :l3_vpn_ipv6_unicast, :message, 14, "gobgpapi.Vpn"
-    optional :use_multiple_paths, :message, 15, "gobgpapi.UseMultiplePaths"
-    optional :active, :bool, 16
-    optional :prefixes, :message, 17, "gobgpapi.Prefixes"
   end
   add_message "gobgpapi.ApplyPolicy" do
     optional :in_policy, :message, 1, "gobgpapi.PolicyAssignment"
     optional :export_policy, :message, 2, "gobgpapi.PolicyAssignment"
     optional :import_policy, :message, 3, "gobgpapi.PolicyAssignment"
-  end
-  add_message "gobgpapi.AfiSafiGracefulRestart" do
-    optional :advertised, :bool, 1
-    optional :enabled, :bool, 2
-    optional :received, :bool, 3
-  end
-  add_message "gobgpapi.LabelledUnicast" do
-    optional :prefix_limit, :message, 1, "gobgpapi.PrefixLimit"
-  end
-  add_message "gobgpapi.PrefixLimit" do
-    optional :max_prefixes, :uint32, 1
-    optional :restart_timer, :uint64, 2
-    optional :shutdown_threshold_pct, :uint32, 3
-  end
-  add_message "gobgpapi.Unicast" do
-    optional :send_default_route, :bool, 1
-    optional :prefix_limit, :message, 2, "gobgpapi.PrefixLimit"
-  end
-  add_message "gobgpapi.Vpn" do
-    optional :prefix_limit, :message, 1, "gobgpapi.PrefixLimit"
-  end
-  add_message "gobgpapi.Prefixes" do
-    optional :installed, :uint32, 1
-    optional :received, :uint32, 2
-    optional :sent, :uint32, 3
-  end
-  add_message "gobgpapi.UseMultiplePaths" do
-    optional :enabled, :bool, 1
-    optional :ebgp, :message, 2, "gobgpapi.Ebgp"
-  end
-  add_message "gobgpapi.Ebgp" do
-    optional :allow_multiple_as, :bool, 1
-  end
-  add_message "gobgpapi.AsPathOptions" do
-    optional :allow_own_as, :uint32, 1
-    optional :replace_peer_as, :bool, 2
   end
   add_message "gobgpapi.PeerConf" do
     optional :auth_password, :string, 1
@@ -177,23 +135,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "gobgpapi.EbgpMultihop" do
     optional :enabled, :bool, 1
     optional :multihop_ttl, :uint32, 2
-  end
-  add_message "gobgpapi.ErrorHandling" do
-    optional :erroneous_update_messages, :uint32, 1
-    optional :treat_as_withdraw, :bool, 2
-  end
-  add_message "gobgpapi.PeerGracefulRestart" do
-    optional :enabled, :bool, 1
-    optional :helper_only, :bool, 2
-    optional :local_restarting, :bool, 3
-    optional :mode, :uint32, 4
-    optional :peer_restart_time, :uint32, 5
-    optional :peer_restarting, :bool, 6
-    optional :restart_time, :uint32, 7
-    optional :stale_routes_time, :uint64, 8
-  end
-  add_message "gobgpapi.LoggingOptions" do
-    optional :logNeighbor_state_changes, :bool, 1
   end
   add_message "gobgpapi.RouteReflector" do
     optional :route_reflector_client, :bool, 1
@@ -339,12 +280,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "gobgpapi.RPKIConf" do
     optional :address, :string, 1
+    optional :remote_port, :uint32, 2
   end
   add_message "gobgpapi.RPKIState" do
     optional :uptime, :int64, 1
     optional :downtime, :int64, 2
-    optional :received_ipv4, :int32, 3
-    optional :received_ipv6, :int32, 4
+    optional :received_ipv4, :int64, 3
+    optional :received_ipv6, :int64, 4
   end
   add_message "gobgpapi.RPKI" do
     optional :conf, :message, 1, "gobgpapi.RPKIConf"
@@ -355,6 +297,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :prefixlen, :uint32, 2
     optional :maxlen, :uint32, 3
     optional :prefix, :string, 4
+    optional :conf, :message, 5, "gobgpapi.RPKIConf"
   end
   add_message "gobgpapi.Vrf" do
     optional :name, :string, 1
@@ -365,6 +308,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "gobgpapi.Global" do
     optional :as, :uint32, 1
     optional :router_id, :string, 2
+    optional :listen_port, :int32, 3
   end
   add_enum "gobgpapi.Resource" do
     value :GLOBAL, 0
@@ -378,6 +322,10 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     value :DEL, 1
     value :DEL_ALL, 2
     value :REPLACE, 3
+    value :ENABLE, 4
+    value :DISABLE, 5
+    value :RESET, 6
+    value :SOFTRESET, 7
   end
   add_enum "gobgpapi.DefinedType" do
     value :PREFIX, 0
@@ -423,8 +371,12 @@ module Gobgpapi
   Error::ErrorCode = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Error.ErrorCode").enummodule
   Arguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Arguments").msgclass
   ModPathArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModPathArguments").msgclass
+  ModPathResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModPathResponse").msgclass
+  ModPathsArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModPathsArguments").msgclass
   ModNeighborArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModNeighborArguments").msgclass
   MrtArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.MrtArguments").msgclass
+  ModMrtArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModMrtArguments").msgclass
+  ModRpkiArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModRpkiArguments").msgclass
   ModVrfArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModVrfArguments").msgclass
   ModDefinedSetArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModDefinedSetArguments").msgclass
   ModStatementArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModStatementArguments").msgclass
@@ -433,25 +385,11 @@ module Gobgpapi
   ModGlobalConfigArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModGlobalConfigArguments").msgclass
   Path = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Path").msgclass
   Destination = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Destination").msgclass
+  Table = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Table").msgclass
   Peer = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Peer").msgclass
-  AddPaths = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.AddPaths").msgclass
-  AfiSafis = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.AfiSafis").msgclass
-  AfiSafi = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.AfiSafi").msgclass
   ApplyPolicy = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ApplyPolicy").msgclass
-  AfiSafiGracefulRestart = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.AfiSafiGracefulRestart").msgclass
-  LabelledUnicast = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.LabelledUnicast").msgclass
-  PrefixLimit = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.PrefixLimit").msgclass
-  Unicast = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Unicast").msgclass
-  Vpn = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Vpn").msgclass
-  Prefixes = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Prefixes").msgclass
-  UseMultiplePaths = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.UseMultiplePaths").msgclass
-  Ebgp = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Ebgp").msgclass
-  AsPathOptions = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.AsPathOptions").msgclass
   PeerConf = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.PeerConf").msgclass
   EbgpMultihop = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.EbgpMultihop").msgclass
-  ErrorHandling = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ErrorHandling").msgclass
-  PeerGracefulRestart = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.PeerGracefulRestart").msgclass
-  LoggingOptions = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.LoggingOptions").msgclass
   RouteReflector = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.RouteReflector").msgclass
   PeerState = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.PeerState").msgclass
   Messages = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Messages").msgclass
