@@ -33,8 +33,10 @@ module Gobgpapi
       rpc :ModPaths, stream(ModPathsArguments), Error
       rpc :MonitorBestChanged, Arguments, stream(Destination)
       rpc :MonitorPeerState, Arguments, stream(Peer)
+      rpc :MonitorROAValidation, Arguments, stream(ROAResult)
       rpc :GetMrt, MrtArguments, stream(MrtMessage)
       rpc :ModMrt, ModMrtArguments, Error
+      rpc :ModBmp, ModBmpArguments, Error
       rpc :GetRPKI, Arguments, stream(RPKI)
       rpc :ModRPKI, ModRpkiArguments, Error
       rpc :GetROA, Arguments, stream(ROA)

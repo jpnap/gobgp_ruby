@@ -46,6 +46,17 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :operation, :enum, 1, "gobgpapi.Operation"
     optional :filename, :string, 2
   end
+  add_message "gobgpapi.ModBmpArguments" do
+    optional :operation, :enum, 1, "gobgpapi.Operation"
+    optional :address, :string, 2
+    optional :port, :uint32, 3
+    optional :type, :enum, 4, "gobgpapi.ModBmpArguments.MonitoringPolicy"
+  end
+  add_enum "gobgpapi.ModBmpArguments.MonitoringPolicy" do
+    value :PRE, 0
+    value :POST, 1
+    value :BOTH, 2
+  end
   add_message "gobgpapi.ModRpkiArguments" do
     optional :operation, :enum, 1, "gobgpapi.Operation"
     optional :address, :string, 2
@@ -285,8 +296,21 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "gobgpapi.RPKIState" do
     optional :uptime, :int64, 1
     optional :downtime, :int64, 2
-    optional :received_ipv4, :int64, 3
-    optional :received_ipv6, :int64, 4
+    optional :up, :bool, 3
+    optional :record_ipv4, :uint32, 4
+    optional :record_ipv6, :uint32, 5
+    optional :prefix_ipv4, :uint32, 6
+    optional :prefix_ipv6, :uint32, 7
+    optional :serial, :uint32, 8
+    optional :received_ipv4, :int64, 9
+    optional :received_ipv6, :int64, 10
+    optional :serial_notify, :int64, 11
+    optional :cache_reset, :int64, 12
+    optional :cache_response, :int64, 13
+    optional :end_of_data, :int64, 14
+    optional :error, :int64, 15
+    optional :serial_query, :int64, 16
+    optional :reset_query, :int64, 17
   end
   add_message "gobgpapi.RPKI" do
     optional :conf, :message, 1, "gobgpapi.RPKIConf"
@@ -298,6 +322,29 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :maxlen, :uint32, 3
     optional :prefix, :string, 4
     optional :conf, :message, 5, "gobgpapi.RPKIConf"
+  end
+  add_message "gobgpapi.ROAResult" do
+    optional :reason, :enum, 1, "gobgpapi.ROAResult.ValidationReason"
+    optional :address, :string, 2
+    optional :timestamp, :int64, 3
+    optional :aspath_attr, :bytes, 4
+    optional :origin_as, :uint32, 5
+    optional :prefix, :string, 6
+    optional :old_result, :enum, 7, "gobgpapi.ROAResult.ValidationResult"
+    optional :new_result, :enum, 8, "gobgpapi.ROAResult.ValidationResult"
+    repeated :roas, :message, 9, "gobgpapi.ROA"
+  end
+  add_enum "gobgpapi.ROAResult.ValidationReason" do
+    value :UPDATE, 0
+    value :WITHDRAW, 1
+    value :PEER_DOWN, 2
+    value :REVALIDATE, 3
+  end
+  add_enum "gobgpapi.ROAResult.ValidationResult" do
+    value :NONE, 0
+    value :NOT_FOUND, 1
+    value :VALID, 2
+    value :INVALID, 3
   end
   add_message "gobgpapi.Vrf" do
     optional :name, :string, 1
@@ -376,6 +423,8 @@ module Gobgpapi
   ModNeighborArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModNeighborArguments").msgclass
   MrtArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.MrtArguments").msgclass
   ModMrtArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModMrtArguments").msgclass
+  ModBmpArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModBmpArguments").msgclass
+  ModBmpArguments::MonitoringPolicy = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModBmpArguments.MonitoringPolicy").enummodule
   ModRpkiArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModRpkiArguments").msgclass
   ModVrfArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModVrfArguments").msgclass
   ModDefinedSetArguments = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ModDefinedSetArguments").msgclass
@@ -417,6 +466,9 @@ module Gobgpapi
   RPKIState = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.RPKIState").msgclass
   RPKI = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.RPKI").msgclass
   ROA = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ROA").msgclass
+  ROAResult = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ROAResult").msgclass
+  ROAResult::ValidationReason = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ROAResult.ValidationReason").enummodule
+  ROAResult::ValidationResult = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.ROAResult.ValidationResult").enummodule
   Vrf = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Vrf").msgclass
   Global = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Global").msgclass
   Resource = Google::Protobuf::DescriptorPool.generated_pool.lookup("gobgpapi.Resource").enummodule
